@@ -26,4 +26,6 @@ PyTorch is a Python package that provides two high-level features:
 4. TBD
 
 ## Results
-TBD
+| Model | Accuracy |
+| --- | --- |
+| Baseline model | 0.678 |
