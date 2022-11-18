@@ -1,14 +1,15 @@
 import os
 import numpy as np
 import pandas as pd
-from math import ceil
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import torch
 from torch.utils.data import DataLoader
 
 BATCH_SIZE = 32  # Batch size of the train set
-ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ROOT = os.path.abspath(__file__)
+for i in range(3):
+    ROOT = os.path.dirname(ROOT)
 PATH = os.path.join(ROOT, 'data')
 
 SEED = 123
@@ -18,7 +19,8 @@ np.random.seed(SEED)
 
 class Dataset(torch.utils.data.Dataset):
     def __init__(self, data):
-        self.X = data.drop(columns=['ID_code', 'target']).values
+        self.X = data.drop(
+            columns=['ID_code', 'target'], errors='ignore').values
         self.X = torch.tensor(self.X, dtype=torch.float32)
 
         self.has_target = False
@@ -57,7 +59,7 @@ val_loader = DataLoader(val_set, batch_size=len(val_set), shuffle=False)
 
 # Same steps for the test set
 test_file = os.path.join(PATH, 'test.csv')
-test_df = pd.read_csv(train_file)
+test_df = pd.read_csv(test_file)
 test_df[feature_cols] = scaler.transform(test_df[feature_cols])
 test_set = Dataset(test_df)
 test_loader = DataLoader(test_set, batch_size=len(test_set), shuffle=False)
