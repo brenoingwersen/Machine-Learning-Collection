@@ -8,20 +8,21 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 from model import Net
-from get_data import train_loader, val_loader, test_loader
+from get_data import train_loader, val_loader
 
 TIMESTAMP = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
 ROOT = os.path.abspath(__file__)
 for i in range(3):
-    ROOT = os.path.dirname()
+    ROOT = os.path.dirname(ROOT)
 PATH = os.path.join(ROOT, 'best_models')
 
 # Instantiate the model
-model = Net(200)
+# input_size, hidden_dim
+model = Net(400, 16)
 
 # Hyperparams
-epochs = 100
-lr = 3e-4
+epochs = 200
+lr = 1e-3
 optimizer = optim.Adam(model.parameters(), lr=lr)
 criterion = nn.CrossEntropyLoss()
 patience = 10  # Amount of epochs to get a better model performance on the validation set
@@ -64,7 +65,7 @@ def train_one_epoch(epoch, writer):
 
 
 # The training loop
-writer = SummaryWriter(f'{PATH}/baseline_model_{TIMESTAMP}')
+writer = SummaryWriter(f'{PATH}/model_1_{TIMESTAMP}')
 best_avg_loss = 1e6
 n_patience = 0
 last_val_loss = 1e6
@@ -119,7 +120,7 @@ for epoch in range(1, epochs + 1):
     best_optim_params = optimizer.state_dict()
 
 # Save the best model after training is complete
-MODEL_PATH = os.path.join(PATH, f'baseline_model_{TIMESTAMP}_{epoch}')
+MODEL_PATH = os.path.join(PATH, f'model_1_{TIMESTAMP}_{epoch}')
 torch.save({
     'epoch': epoch,
     'model_state_dict': best_model_params,

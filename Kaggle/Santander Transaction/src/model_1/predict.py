@@ -16,10 +16,10 @@ test_df = pd.read_csv(TEST_FILE, usecols=['ID_code'])
 
 # Load the checkpoint dict
 checkpoint = torch.load(os.path.join(
-    PATH, 'baseline_model_20221117_214149_100'))
+    PATH, 'model_1_20221118_154551_200'))
 
 # Instantiate the model
-model = Net(200)
+model = Net(400, 16)
 
 # Load the model's weights and biases
 model.load_state_dict(checkpoint['model_state_dict'])
@@ -39,5 +39,5 @@ test_df['target'] = preds
 
 # Save predictions
 PRED_PATH = os.path.join(ROOT, 'predictions')
-PRED_FILE = os.path.join(PRED_PATH, 'predictions_baseline_model.csv')
+PRED_FILE = os.path.join(PRED_PATH, 'predictions_model_1.csv')
 test_df.to_csv(PRED_FILE, index=False)
